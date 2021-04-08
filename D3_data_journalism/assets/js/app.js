@@ -25,7 +25,7 @@ var chartGroup = svg.append("g")
 
 // Initial Params
 var chosenXAxis = "poverty";
-var chosenYAxis = "healthcareLow"
+var chosenYAxis = "healthcare"
 
 // function used for updating x-scale var upon click on axis label
 function xScale(data, chosenXAxis) {
@@ -76,8 +76,8 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     xlabel = "Household Income: "
   }
 
-  if (chosenYAxis === "healthcareLow") {
-    ylabel = "Lacks healthcareLow: "
+  if (chosenYAxis === "healthcare") {
+    ylabel = "Lacks healthcare: "
   } else if(chosenYAxis === "smokes"){
     ylabel = "Smokes: "
   } else{
@@ -114,9 +114,9 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     data.age = +data.age;
     data.smoke = +data.smoke;
     data.obese = +data.obese
-    // data.healthcareLow = +data.healthcareLow;
-    data.healthcareLow = +data.healthcareLow;
-    // data.healthcareLowHigh = +data.healthcareLowHigh;
+    // data.healthcare = +data.healthcare;
+    data.healthcare = +data.healthcare;
+    // data.healthcareHigh = +data.healthcareHigh;
   });
 
   // xLinearScale function above csv import
@@ -124,7 +124,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
 
   // Create y scale function
   var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(stateData, d => d.healthcareLow)])
+    .domain([0, d3.max(stateData, d => d.healthcare)])
     .range([height, 0]);
 
   // Create initial axis functions
@@ -147,7 +147,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
-    .attr("cy", d => yLinearScale(d.healthcareLow))
+    .attr("cy", d => yLinearScale(d.healthcare))
     .attr("r", 20)
     .attr("fill", "pink")
     .attr("opacity", ".5")
@@ -191,7 +191,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
   var ageMedianLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "healthcareLow") // value to grab for event listener
+    .attr("value", "healthcare") // value to grab for event listener
     .classed("inactive", true)
     .text("Age (Median)");
 
@@ -211,12 +211,12 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     .classed("axis-text", true)
     .text("Lacks Healthcare %");
 
-  //   var healthcareLowLabel = labelsGroup.append("text")
+  //   var healthcareLabel = labelsGroup.append("text")
   // .attr("x", 20)
   // .attr("y", 0)
-  // .attr("value", "healthcareLow") // value to grab for event listener
+  // .attr("value", "healthcare") // value to grab for event listener
   // .classed("active", true)
-  // .text("Lacks healthcareLow %");
+  // .text("Lacks healthcare %");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
@@ -264,8 +264,8 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
             .classed("inactive", false);
         }
 
-        if (chosenYAxis === "healthcareLow") {
-          healthcareLowLabel
+        if (chosenYAxis === "healthcare") {
+          healthcareLabel
             .classed("active", true)
             .classed("inactive", false);
           obeseLabel
@@ -273,7 +273,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
             .classed("inactive", true);
         }
         else {
-          healthcareLowLabel
+          healthcareLabel
             .classed("active", false)
             .classed("inactive", true);
           obeseLabel
