@@ -82,8 +82,8 @@ function renderCircles(circlesGroup, newXScale, newYScale, chosenXAxis, chosenYA
 
     .attr("cx", d => newXScale(d[chosenXAxis]))
     .attr("cy", d=> newYScale(d[chosenYAxis]))
-  console.log(chosenXAxis)
-  console.log(chosenYAxis)
+  // console.log(chosenXAxis)
+  // console.log(chosenYAxis)
 
   return circlesGroup;
 }
@@ -92,7 +92,7 @@ function renderStateAbbr(stateAbbr, xLinearScale, yLinearScale, chosenXAxis, cho
   stateAbbr.transition()
     .duration(1000)
     .attr("x", d=> xLinearScale(d[chosenXAxis]))
-    .attr("y", d=> yLinearScale(d[chosenYAxis]))
+    .attr("y", d=> yLinearScale(d[chosenYAxis] - 0.24))
 
     return stateAbbr
 }
@@ -116,26 +116,33 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, stateAbbr) {
   var ylabel;
 
   if (chosenXAxis === "poverty") {
-    xlabel = "Poverty: ";
+    xlabel = "Poverty";
   }
-  else if(chosenXAxis === "age") {
-    xlabel = "Age: ";
-  } else{
-    xlabel = "Household Income: "
+  else if(chosenXAxis === "income") {
+    xlabel = "Household Income";
+  } else {
+    xlabel = "Age";
   }
 
   if (chosenYAxis === "healthcare") {
-    ylabel = "Lacks healthcare: "
+    ylabel = "Lacks healthcare"
   } else if(chosenYAxis === "smokes"){
-    ylabel = "Smokes: "
+    ylabel = "Smokes"
   } else{
-    ylabel = "Obesity: "
+    ylabel = "Obesity"
   }
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
+    .attr("class", "d3-tip")
     .offset([10, -60])
     .html(function(d) {
-      return (`${d.state}<br>${xlabel} ${d[chosenXAxis]}%<br>${ylabel} ${d[chosenYAxis]}%`);
+      if (chosenXAxis === "income"){
+        return (`${d.state}<br>${xlabel}: $${d[chosenXAxis]}<br>${ylabel} ${d[chosenYAxis]}%`);
+      } else if (chosenXAxis === "poverty"){
+        return (`${d.state}<br>${xlabel}: ${d[chosenXAxis]}%<br>${ylabel} ${d[chosenYAxis]}%`);
+      } else{
+      return (`${d.state}<br>${xlabel}: ${d[chosenXAxis]}<br>${ylabel} ${d[chosenYAxis]}%`);
+      
+    }
     });
 
   circlesGroup.call(toolTip);
@@ -153,9 +160,19 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, stateAbbr) {
 
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(stateData, error) {
-    console.log(stateData)
+    var ageArr = []
+    var healthArr = []
+    for (var i= 0; i< stateData.length; i++){
+      var agePoint = stateData[i].age
+      var healthPoint = stateData[i].healthcare
+      ageArr.push(agePoint)
+      healthArr.push(healthPoint)
+    }
+    console.log(ageArr)
+    console.log(healthArr)
+    // console.log(stateData.age)
+    // console.log(stateData.healthcare)
   if (error) throw error;
-
   // parse data
     stateData.forEach(function(data) {
     data.poverty = +data.poverty;
@@ -200,9 +217,9 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 15)
-    .attr("fill", "pink")
-    .attr("opacity", ".5")
+    .attr("r", 10)
+    // .attr("fill", "pink")
+    // .attr("opacity", ".7")
     .classed("stateCircle", true);
 
   
@@ -222,7 +239,8 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     .enter()
     .append("text")
     .attr("x", d=> xLinearScale(d[chosenXAxis]))
-    .attr("y", d=> yLinearScale(d[chosenYAxis]))
+    .attr("y", d=> yLinearScale(d[chosenYAxis] - 0.24))
+    // .attr("fontsize", "10px")
     .text(function(d){
       return d.abbr
     })
@@ -259,7 +277,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
   var ageMedianLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "healthcare") // value to grab for event listener
+    .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
     .text("Age (Median)");
 
