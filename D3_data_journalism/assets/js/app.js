@@ -79,6 +79,7 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis) {
 
   circlesGroup.transition()
     .duration(1000)
+
     .attr("cx", d => newXScale(d[chosenXAxis]))
     // .attr("cy", d=> newYScale(d[chosenYAxis]))
 
@@ -117,7 +118,7 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   circlesGroup.call(toolTip);
 
   circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data);
+    toolTip.show(data, this);
   })
     // onmouseout event
     .on("mouseout", function(data, index) {
@@ -180,14 +181,21 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     .attr("fill", "pink")
     .attr("opacity", ".5")
     // .text(stateData.abbr)
-    .append("text")
+    // .append("text")
+    // // .text(function(d){
+    // //   return radiusScale(5)
+    // // })
+    // // .attr("dx", function(d){return -20})
     // .text(function(d){
-    //   return radiusScale(5)
+    //   return d.abbr
     // })
-    // .attr("dx", function(d){return -20})
+  
+  var stateAbbr = circlesGroup.append("text")
+    .classed("stateText", true)
     .text(function(d){
       return d.abbr
     })
+    
 
   // var textCircle = circlesGroup.append("text")
   //   // .attr("dx", function(d){return -20})
@@ -289,7 +297,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
         // functions here found above csv import
         // updates x scale for new data
         xLinearScale = xScale(stateData, chosenXAxis);
-        console.log(xLinearScale)
+        // console.log(xLinearScale)
         // updates x axis with transition
         xAxis = renderxAxes(xLinearScale, xAxis);
         // var circlesGroup = chartGroup.selectAll("circle")
@@ -309,7 +317,15 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
         //   })
         // updates circles with new x values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, chosenXAxis);
-
+        // d3.select("circle").each(()=>{
+        //   d3.select(this).transition()
+        //     .attr("cx", function(d){
+        //       return xLinearScale(d[chosenXAxis])
+        //     })
+        //     .duration(1000)
+        // })
+        // .attr("cy", d=> newYScale(d[chosenYAxis]))
+    
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
@@ -422,11 +438,12 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
 
   ylabelsGroup.selectAll("text")
     .on("click", function() {
-      console.log("running chart group")
+      // console.log("running chart group")
       // get value of selection
       var value = d3.select(this).attr("value");
     if (value !== chosenYAxis){
         chosenYAxis = value;
+        // console.log(chosenYAxis)
 
         // console.log(chosenXAxis)
 
