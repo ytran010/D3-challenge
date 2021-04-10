@@ -116,7 +116,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, stateAbbr) {
   var ylabel;
 
   if (chosenXAxis === "poverty") {
-    xlabel = "Poverty: ";
+    xlabel = "Poverty: "; 
   }
   else if(chosenXAxis === "income") {
     xlabel = "Household Income: ";
@@ -160,15 +160,15 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, stateAbbr) {
 
 // Retrieve data from the CSV file and execute everything below
 d3.csv("assets/data/data.csv").then(function(stateData, error) {
-    var ageArr = []
+    var smokesArr = []
     var healthArr = []
     for (var i= 0; i< stateData.length; i++){
-      var agePoint = stateData[i].age
+      var smokePoint = stateData[i].smokes
       var healthPoint = stateData[i].healthcare
-      ageArr.push(agePoint)
+      smokesArr.push(smokePoint)
       healthArr.push(healthPoint)
     }
-    console.log(ageArr)
+    console.log(smokesArr)
     console.log(healthArr)
     // console.log(stateData.age)
     // console.log(stateData.healthcare)
@@ -404,7 +404,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     if (value !== chosenYAxis){
         chosenYAxis = value;
         // console.log(chosenYAxis)
-        console.log(chosenYAxis)
+        // console.log(yAxis)
 
         // console.log(chosenXAxis)
 
@@ -414,10 +414,10 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
 
         // updates x axis with transition
         yAxis = renderyAxes(yLinearScale, yAxis);
-
+        // console.log(yLinearScale)
         // updates circles with new x values
         circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis, stateAbbr);
-
+        console.log(circlesGroup)
         stateAbbr = renderStateAbbr(stateAbbr, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis)
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup, stateAbbr);
