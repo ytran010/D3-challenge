@@ -170,6 +170,7 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     }
     console.log(smokesArr)
     console.log(healthArr)
+
     // console.log(stateData.age)
     // console.log(stateData.healthcare)
   if (error) throw error;
@@ -177,12 +178,13 @@ d3.csv("assets/data/data.csv").then(function(stateData, error) {
     stateData.forEach(function(data) {
     data.poverty = +data.poverty;
     data.age = +data.age;
-    data.smoke = +data.smoke;
+    data.smokes = +data.smokes;
     data.obese = +data.obese
     // data.healthcare = +data.healthcare;
     data.healthcare = +data.healthcare;
     // data.healthcareHigh = +data.healthcareHigh;
   });
+  console.log(stateData)
 
   // xLinearScale function above csv import
   var xLinearScale = xScale(stateData, chosenXAxis);
